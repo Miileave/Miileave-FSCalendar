@@ -113,8 +113,6 @@
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
         self.subtitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
         
-        // titleLabel의 높이를 폰트 크기로 수정
-        // contentView의 상단으로부터 21.0만큼 떨어진 곳에 위치
         [NSLayoutConstraint activateConstraints:@[
             [self.titleLabel.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant: 21.0],
             [self.titleLabel.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:self.preferredTitleOffset.x],
@@ -122,6 +120,7 @@
             [self.titleLabel.heightAnchor constraintEqualToConstant:titleHeight]
         ]];
         
+        // Add new constraints for subtitleLabel
         [NSLayoutConstraint activateConstraints:@[
             [self.subtitleLabel.topAnchor constraintEqualToAnchor:self.titleLabel.bottomAnchor constant: - (_titleLabel.fs_height-_titleLabel.font.pointSize)+self.preferredSubtitleOffset.y],
             [self.subtitleLabel.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:self.preferredSubtitleOffset.x],
@@ -143,9 +142,12 @@
     
     CGFloat titleHeight = self.bounds.size.height*5.0/6.0;
     CGFloat diameter = MIN(self.bounds.size.height*5.0/6.0,self.bounds.size.width);
-    diameter = diameter > FSCalendarStandardCellDiameter ? (diameter - (diameter-FSCalendarStandardCellDiameter)*0.5) : diameter;
-    _shapeLayer.frame = CGRectMake((self.bounds.size.width-diameter)/2,
-                                   (titleHeight-diameter)/2,
+        diameter = diameter > FSCalendarStandardCellDiameter ? (diameter - (diameter-FSCalendarStandardCellDiameter)*0.5) : diameter;
+    
+    CGFloat titleCenter = CGRectGetMidX(self.contentView.bounds);
+
+    _shapeLayer.frame = CGRectMake(titleCenter - (diameter / 2),
+                                   titleCenter - (diameter / 2),
                                    diameter,
                                    diameter);
     
