@@ -69,7 +69,7 @@
     shapeLayer.borderWidth = 1.0;
     shapeLayer.borderColor = [UIColor clearColor].CGColor;
     shapeLayer.opacity = 0;
-    [self.contentView.layer insertSublayer:shapeLayer below:_titleLabel.layer];
+    [self.contentView.layer insertSublayer:shapeLayer atIndex:0];           // cell의 가장 뒤쪽에 오도록 수정
     self.shapeLayer = shapeLayer;
     
     eventIndicator = [[FSCalendarEventIndicator alloc] initWithFrame:CGRectZero];
@@ -102,10 +102,11 @@
         }
     }
     
+    CGFloat titleHeight = self.titleLabel.font.lineHeight;
+    
     if (_subtitle) {
         CGFloat titleHeight = self.titleLabel.font.lineHeight;
         CGFloat subtitleHeight = self.subtitleLabel.font.lineHeight;
-        CGFloat height = titleHeight + subtitleHeight;
         
         [NSLayoutConstraint deactivateConstraints:self.titleLabel.constraints];
         [NSLayoutConstraint deactivateConstraints:self.subtitleLabel.constraints];
@@ -127,8 +128,6 @@
             [self.subtitleLabel.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor]
         ]];
     } else {
-        CGFloat titleHeight = self.titleLabel.font.lineHeight;
-        
         [NSLayoutConstraint deactivateConstraints:self.titleLabel.constraints];
 
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -143,14 +142,13 @@
     
     _imageView.frame = CGRectMake(self.preferredImageOffset.x, self.preferredImageOffset.y, self.contentView.fs_width, self.contentView.fs_height);
     
-    CGFloat titleHeight = self.bounds.size.height*5.0/6.0;
-    CGFloat diameter = MIN(self.bounds.size.height*5.0/6.0,self.bounds.size.width);
-        diameter = diameter > FSCalendarStandardCellDiameter ? (diameter - (diameter-FSCalendarStandardCellDiameter)*0.5) : diameter;
+    // selectionShape의 크기 및 위치 조정
+    CGFloat diameter = 36.0;
     
     CGFloat titleCenter = CGRectGetMidX(self.contentView.frame);
 
     _shapeLayer.frame = CGRectMake(titleCenter - (diameter / 2),
-                                   titleCenter - (diameter / 2),
+                                   12.0,
                                    diameter,
                                    diameter);
     
@@ -160,6 +158,7 @@
         _shapeLayer.path = path;
     }
     
+    // eventDot의 크기와 위치
     CGFloat eventSize = _shapeLayer.frame.size.height/4.0;
     _eventIndicator.frame = CGRectMake(
                                        self.preferredEventOffset.x,
