@@ -127,6 +127,8 @@
             [self.subtitleLabel.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor]
         ]];
     } else {
+        CGFloat titleHeight = self.titleLabel.font.lineHeight;
+        
         [NSLayoutConstraint deactivateConstraints:self.titleLabel.constraints];
 
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -134,7 +136,8 @@
             [NSLayoutConstraint activateConstraints:@[
                 [self.titleLabel.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant: 21.0],
                 [self.titleLabel.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:self.preferredTitleOffset.x],
-                [self.titleLabel.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor]
+                [self.titleLabel.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor],
+                [self.titleLabel.heightAnchor constraintEqualToConstant:titleHeight]
             ]];
     }
     
@@ -144,7 +147,7 @@
     CGFloat diameter = MIN(self.bounds.size.height*5.0/6.0,self.bounds.size.width);
         diameter = diameter > FSCalendarStandardCellDiameter ? (diameter - (diameter-FSCalendarStandardCellDiameter)*0.5) : diameter;
     
-    CGFloat titleCenter = CGRectGetMidX(self.contentView.bounds);
+    CGFloat titleCenter = CGRectGetMidX(self.contentView.frame);
 
     _shapeLayer.frame = CGRectMake(titleCenter - (diameter / 2),
                                    titleCenter - (diameter / 2),
