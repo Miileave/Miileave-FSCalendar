@@ -46,7 +46,7 @@
 }
 
 - (void)commonInit
-{   
+{
     UILabel *label;
     CAShapeLayer *shapeLayer;
     UIImageView *imageView;
@@ -105,27 +105,38 @@
     if (_subtitle) {
         CGFloat titleHeight = self.titleLabel.font.lineHeight;
         CGFloat subtitleHeight = self.subtitleLabel.font.lineHeight;
-        
         CGFloat height = titleHeight + subtitleHeight;
-        _titleLabel.frame = CGRectMake(
-                                       self.preferredTitleOffset.x,
-                                       (self.contentView.fs_height*5.0/6.0-height)*0.5+self.preferredTitleOffset.y,
-                                       self.contentView.fs_width,
-                                       titleHeight
-                                       );
-        _subtitleLabel.frame = CGRectMake(
-                                          self.preferredSubtitleOffset.x,
-                                          (_titleLabel.fs_bottom-self.preferredTitleOffset.y) - (_titleLabel.fs_height-_titleLabel.font.pointSize)+self.preferredSubtitleOffset.y,
-                                          self.contentView.fs_width,
-                                          subtitleHeight
-                                          );
+        
+        [NSLayoutConstraint deactivateConstraints:self.titleLabel.constraints];
+        [NSLayoutConstraint deactivateConstraints:self.subtitleLabel.constraints];
+        
+        self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        self.subtitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        
+        // titleLabel의 높이를 폰트 크기로 수정
+        // contentView의 상단으로부터 21.0만큼 떨어진 곳에 위치
+        [NSLayoutConstraint activateConstraints:@[
+            [self.titleLabel.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant: 21.0],
+            [self.titleLabel.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:self.preferredTitleOffset.x],
+            [self.titleLabel.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor],
+            [self.titleLabel.heightAnchor constraintEqualToConstant:titleHeight]
+        ]];
+        
+        [NSLayoutConstraint activateConstraints:@[
+            [self.subtitleLabel.topAnchor constraintEqualToAnchor:self.titleLabel.bottomAnchor constant: - (_titleLabel.fs_height-_titleLabel.font.pointSize)+self.preferredSubtitleOffset.y],
+            [self.subtitleLabel.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:self.preferredSubtitleOffset.x],
+            [self.subtitleLabel.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor]
+        ]];
     } else {
-        _titleLabel.frame = CGRectMake(
-                                       self.preferredTitleOffset.x,
-                                       self.preferredTitleOffset.y,
-                                       self.contentView.fs_width,
-                                       floor(self.contentView.fs_height*5.0/6.0)
-                                       );
+        [NSLayoutConstraint deactivateConstraints:self.titleLabel.constraints];
+
+        self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+
+            [NSLayoutConstraint activateConstraints:@[
+                [self.titleLabel.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant: 21.0],
+                [self.titleLabel.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:self.preferredTitleOffset.x],
+                [self.titleLabel.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor]
+            ]];
     }
     
     _imageView.frame = CGRectMake(self.preferredImageOffset.x, self.preferredImageOffset.y, self.contentView.fs_width, self.contentView.fs_height);
@@ -150,7 +161,7 @@
                                        CGRectGetMaxY(_shapeLayer.frame)+eventSize*0.17+self.preferredEventOffset.y,
                                        self.fs_width,
                                        eventSize*0.83
-                                      );
+                                       );
     
 }
 
@@ -169,7 +180,7 @@
 - (void)performSelecting
 {
     _shapeLayer.opacity = 1;
-        
+    
     CAAnimationGroup *group = [CAAnimationGroup animation];
     CABasicAnimation *zoomOut = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
     zoomOut.fromValue = @0.3;
@@ -249,7 +260,7 @@
     
     _eventIndicator.numberOfEvents = self.numberOfEvents;
     _eventIndicator.color = self.colorsForEvents;
-
+    
 }
 
 - (UIColor *)colorForCurrentStateInDictionary:(NSDictionary *)dictionary
@@ -325,16 +336,16 @@
 \
 - (void)set##CAPITAL:(CGPoint)NAME \
 { \
-    BOOL diff = !CGPointEqualToPoint(NAME, self.NAME); \
-    _##NAME = NAME; \
-    if (diff) { \
-        [self setNeedsLayout]; \
-    } \
+BOOL diff = !CGPointEqualToPoint(NAME, self.NAME); \
+_##NAME = NAME; \
+if (diff) { \
+[self setNeedsLayout]; \
+} \
 } \
 \
 - (CGPoint)NAME \
 { \
-    return CGPointEqualToPoint(_##NAME, CGPointInfinity) ? ALTERNATIVE : _##NAME; \
+return CGPointEqualToPoint(_##NAME, CGPointInfinity) ? ALTERNATIVE : _##NAME; \
 }
 
 OFFSET_PROPERTY(preferredTitleOffset, PreferredTitleOffset, _appearance.titleOffset);
