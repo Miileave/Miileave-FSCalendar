@@ -69,7 +69,7 @@
     shapeLayer.borderWidth = 1.0;
     shapeLayer.borderColor = [UIColor clearColor].CGColor;
     shapeLayer.opacity = 0;
-    [self.contentView.layer insertSublayer:shapeLayer atIndex:0];           // cell의 가장 뒤쪽에 오도록 수정
+    [self.contentView.layer insertSublayer:shapeLayer atIndex:0];                       // cell의 가장 뒤쪽에 오도록 수정
     self.shapeLayer = shapeLayer;
     
     eventIndicator = [[FSCalendarEventIndicator alloc] initWithFrame:CGRectZero];
@@ -133,7 +133,7 @@
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
 
             [NSLayoutConstraint activateConstraints:@[
-                [self.titleLabel.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant: 21.0],
+                [self.titleLabel.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant: 20.0],
                 [self.titleLabel.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:self.preferredTitleOffset.x],
                 [self.titleLabel.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor],
                 [self.titleLabel.heightAnchor constraintEqualToConstant:titleHeight]
@@ -148,7 +148,7 @@
     CGFloat titleCenter = CGRectGetMidX(self.contentView.frame);
 
     _shapeLayer.frame = CGRectMake(titleCenter - (diameter / 2),
-                                   12.0,
+                                   11.0,
                                    diameter,
                                    diameter);
     
